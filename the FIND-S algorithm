@@ -1,29 +1,19 @@
-import pandas as pd
-# Step 1: Load dataset
-data = pd.read_csv("/content/PlayTennis.csv")
-print("Dataset Preview:\n")
-print(data.head())
-# Step 2: Separate features and target
-X = data.iloc[:, :-1].values   # outlook, temp, humidity, windy
-y = data.iloc[:, -1].values    # play (yes / no)
-# Step 3: Initialize hypothesis with FIRST POSITIVE example
-hypothesis = None
-for i in range(len(y)):
-    if y[i].lower() == "yes":
-        hypothesis = X[i].copy()
-        break
-
-print("\nInitial Hypothesis (First Positive Example):")
-print(hypothesis)
-
-# Step 4: Apply FIND-S algorithm
-for i in range(len(X)):
-    if y[i].lower() == "yes":  # ONLY positive examples
-        for j in range(len(hypothesis)):
-            if X[i][j] != hypothesis[j]:
-                hypothesis[j] = "?"
-        print(f"After training example {i+1}: {hypothesis}")
-
-# Step 5: Final hypothesis
-print("\nFinal Most Specific Hypothesis:")
+training_data = [
+    (["Sunny", "Warm", "Normal", "Strong", "Warm", "Same"], "Yes"),
+    (["Sunny", "Warm", "High", "Strong", "Warm", "Same"], "Yes"),
+    (["Rainy", "Cold", "High", "Strong", "Warm", "Change"], "No"),
+    (["Sunny", "Warm", "High", "Strong", "Cool", "Change"], "Yes")
+]
+num_attributes = len(training_data[0][0])
+hypothesis = ["Ø"] * num_attributes
+print("Initial Hypothesis:", hypothesis)
+for instance, label in training_data:
+    if label == "Yes":
+        for i in range(num_attributes):
+            if hypothesis[i] == "Ø":
+                hypothesis[i] = instance[i]
+            elif hypothesis[i] != instance[i]:
+                hypothesis[i] = "?"
+        print("Updated Hypothesis:", hypothesis)
+print("\nFinal Hypothesis:")
 print(hypothesis)
